@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>PShould</id>
+    <version>1.0.0</version>
+    <title>PShould</title>
+    <description>
+	A fluent assertion module for PowerShell.
+	Part of the PSST PowerShell Suite for Testing.
+    </description>
+    <tags>powershell unit testing assertion psst</tags>
+    <authors>Jon Wagner</authors>
+    <projectUrl>https://github.com/jonwagner/PShould</projectUrl>
+    <licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
+  </metadata>
+  <files>
+    <file src="PShould.psm1" target="tools" />
+    <file src="init.ps1" target="tools" />
+  </files>
+</package>
