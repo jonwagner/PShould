@@ -199,21 +199,21 @@ function ShouldBe {
     )
 
     # handle null by checking the value
-    if ($Expected -eq 'Null') {
+    if ('Null' -eq $Expected) {
         return $($Actual) -eq $null
     }
 
     # handle blank by checking the string value
-    if ($Expected -eq 'Blank') {
+    if ('Blank' -eq $Expected) {
         [string] $s = $($Actual)
         return $s -eq ''
     }
 
     # handle empty by checking the length of the array
-    if ($Expected -eq 'Empty') {
+    if ('Empty' -eq $Expected) {
         return @($Actual).Length -eq 0
     }
-    
+
     # map the operator
     if (!$Operator) {
         $Operator = '-eq'

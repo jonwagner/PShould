@@ -20,8 +20,27 @@ function Check {
     }
 }
 
+function Throws {
+    param (
+        [string] $name,
+        [scriptblock] $test
+    )
+
+    try {
+        & $test
+
+        Write-Host "FAIL: $name"
+        $script:failedTests++;
+    }
+    catch {
+        Write-Host "PASS: $name"
+    }
+}
+
 Check "BE" { 5 | should be 5 }
 Check "NOT BE" { 0 | should not be 1 }
+Check "$true is $true" { $true | should be $true }
+Throws "$false is $true" { $false | should be $true }
 Check "!BE" { 0 | should not !be 1 }
 Check "! BE" { 0 | should ! be 1 }
 Check "BE ARRAY" { (1,2) | should be (1,2) }
