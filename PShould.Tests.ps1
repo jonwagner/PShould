@@ -87,6 +87,8 @@ Check "OPERATOR GT" { 5 | should be gt 4 }
 Check "OPERATOR >" { 5 | should be `> 4 }
 Check "-TEST" { 5 | should be 5 -test }
 Check "NOT -TEST" { 7 | should not be 8 -test }
+Throws "Invalid Comparator true" { $true | should $true }
+Throws "Invalid Comparator foo" { $true | should foo }
 
 if ($failedTests -gt 0) {
     throw "FAIL: $failedTests failed tests"

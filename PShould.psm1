@@ -37,6 +37,17 @@ $operators = @{
     '!=' = '-ne'
 }
 
+$comparators = @(
+    'Be',
+    'Equal',
+    'Throw',
+    'Match',
+    'Contain',
+    'Count',
+    'Exist',
+    'ContainContent'
+)
+
 <#
 .Synopsis
     A fluent syntax to assert values.
@@ -104,7 +115,7 @@ function Should {
     $savedinput = @($input)
 
     # handle not
-    if (($comparator -eq 'not') -or ($comparator -eq '!')) {
+    if (('not' -eq $comparator) -or ('!' -eq $comparator)) {
         $not = $true
         $comparator = $args[$i++]
     }
@@ -123,12 +134,15 @@ function Should {
         # handle scriptblock tests
         $result = & $comparator -Value:$savedinput
     }
-    else {
+    elseif ($comparators -contains $comparator) {
         # handle value
         $value = $args[$i++]
 
         # call the assertion by name
         $result = & "Should$comparator" $savedinput $value $operator
+    }
+    else {
+        throw "Comparison $comparator is not supported"
     }
 
     # handle the result
