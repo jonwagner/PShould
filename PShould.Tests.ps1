@@ -95,6 +95,8 @@ Check "IN" { 'null' | should be in ($null, "Null","Blank","Empty") }
 Check "ARRAY IN" { (1, 2) | should be in (1, 2, 3) }
 Throws "ARRAY NOT IN" { (4) | should be in (1, 2, 3) }
 Check "NULL INPUT" { $null | should be $Null }
+Throws "ARRAY INEQUALITY" { ,(1, 2) | Should Be In ((1, 2), (3, 4)) }
+Check "OBJECT EQUALITY" { $a = (1, 2); ,$a | Should Be In ($a, (3, 4)) }
 
 if ($failedTests -gt 0) {
     throw "FAIL: $failedTests failed tests"
