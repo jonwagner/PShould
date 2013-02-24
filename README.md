@@ -6,8 +6,9 @@ PShould will validate a given assumption and throw an exception if the assumptio
 
 PShould is part of the PSST PowerShell Suite for Testing:
 
-* [PSMock](https://github.com/jonwagner/PSMock)
-* [PShould](https://github.com/jonwagner/PShould)
+* [PSMock - mocking for PowerShell](https://github.com/jonwagner/PSMock)
+* [PShould - fluent assertions for PowerShell](https://github.com/jonwagner/PShould)
+* [PSate - test runner for PowerShell](https://github.com/jonwagner/PSate)
 
 ## Examples ##
 
