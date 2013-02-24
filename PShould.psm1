@@ -35,6 +35,10 @@ $operators = @{
     '-ne' = '-ne'
     'ne' = '-ne'
     '!=' = '-ne'
+    'in' = '-in'
+    '-in' = '-in'
+    'notin' = '-notin'
+    '-notin' = '-notin'
 }
 
 $comparators = @(
@@ -239,6 +243,15 @@ function ShouldBe {
     if ($Operator -eq '-eq') {
         return ShouldEqualEx $Actual $Expected
     }
+    elseif ($Operator -in ('-in', '-notin')) {
+        # for in/notin, make sure all of the items are in/not in the expected array
+        foreach ($item in $Actual) {
+            if (!("`$item $Operator `$Expected" | iex)) {
+                return $false
+            }
+        }
+        return $true
+     }
     else {
         return "`$Actual $Operator `$Expected" | iex
     }
