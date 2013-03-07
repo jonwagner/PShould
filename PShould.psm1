@@ -243,10 +243,17 @@ function ShouldBe {
     if ($Operator -eq '-eq') {
         return ShouldEqualEx $Actual $Expected
     }
-    elseif ($Operator -in ('-in', '-notin')) {
+    elseif (('-in', '-notin') -contains $Operator) {
         # for in/notin, make sure all of the items are in/not in the expected array
         foreach ($item in $Actual) {
-            if (!("`$item $Operator `$Expected" | iex)) {
+            if ($PSVersionTable.PSVersion.Major -lt 3) {
+                $result = ("`$Expected $($Operator -replace 'in','contains') `$item" | iex)
+            }
+            else {
+                $result = ("`$item $Operator `$Expected" | iex)
+            }
+
+            if (!$result) {
                 return $false
             }
         }
