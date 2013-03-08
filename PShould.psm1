@@ -116,7 +116,16 @@ function Should {
     $not = $false
     $comparator = $args[$i++]
 
+    # gather the inputs into an array
     $savedinput = @($input)
+
+    # unwrap certain types of collections if passed in individually
+    if ($savedinput.Length -eq 1) {
+        if (($savedinput[0] -is [Hashtable]) -or
+            ($savedinput[0] -is [System.Collections.Specialized.OrderedDictionary])) {
+            $savedinput = $savedinput[0]
+        }
+    }
 
     # handle not
     if (('not' -eq $comparator) -or ('!' -eq $comparator)) {
@@ -293,7 +302,7 @@ function ShouldEqual {
     return ShouldEqualEx $Actual $Expected
 }
 
-# Internal function to test equality. Handles array equality by testing the equality of elements.
+# Internal function to test equality. Handles collection equality by testing the equality of elements.
 function ShouldEqualEx {
     param (
         $Actual,
@@ -315,8 +324,9 @@ function ShouldEqualEx {
         return $true
     }
 
-    # hashtable equality
-    if (($($Actual) -is [Hashtable]) -and ($Expected -is [Hashtable])) {
+    # hashtable/dictionary equality
+    if ((($($Actual) -is [Hashtable]) -and ($Expected -is [Hashtable])) -or
+        (($($Actual) -is [System.Collections.Specialized.OrderedDictionary]) -and ($Expected -is [System.Collections.Specialized.OrderedDictionary]))) {
         $actualHashtable = $($Actual)
         if ($actualHashtable.Count -ne $Expected.Count) {
             return $false
@@ -329,7 +339,8 @@ function ShouldEqualEx {
         }
 
         return $true
-    }    
+    }
+
     return $Expected -eq $($Actual)
 }
 
@@ -416,6 +427,10 @@ function ShouldCount {
         $Collection,
         $Count
     )
+
+    if ($Collection -and ($Collection | Get-Member Count)) {
+        return $Collection.Count -eq $Count
+    }
 
     return @($Collection).Count -eq $Count
 }

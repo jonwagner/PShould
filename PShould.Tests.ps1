@@ -78,6 +78,7 @@ Check "COUNT" { @() | should count 0 }
 Check "COUNT 1" { @(1) | should count 1 }
 Check "COUNT 2" { @(1,2) | should count 2 }
 Check "COUNT AND COUNT" { @(1,2) | should not count 1 and | should count 2 }
+Check "HASHTABLE COUNT" { @{"a"=1;"b"=2} | should count 2 }
 Check "EXIST" { "pshould.psm1" | should exist }
 Check "NOT EXIST" { "notafile" | should not exist }
 Check "CONTAINCONTENT" { "pshould.psm1" | should containcontent "should" }
@@ -97,6 +98,21 @@ Throws "ARRAY NOT IN" { (4) | should be in (1, 2, 3) }
 Check "NULL INPUT" { $null | should be $Null }
 Throws "ARRAY INEQUALITY" { ,(1, 2) | Should Be In ((1, 2), (3, 4)) }
 Check "OBJECT EQUALITY" { $a = (1, 2); ,$a | Should Be In ($a, (3, 4)) }
+Check "ORDERED DICTIONARY EQUALITY" {
+    # requires PS3.0 or later
+    if ($PSVersionTable.PSVersion.Major -ge 3) {
+        $o1= [ordered]@{a=1;b=2;c=3}
+        $o2= [ordered]@{a=1;b=2;c=3}
+        $o1  | Should Equal $o2
+    }
+}
+Check "ORDERED DICTIONARY COUNT" {
+    # requires PS3.0 or later
+    if ($PSVersionTable.PSVersion.Major -ge 3) {
+        $o1= [ordered]@{a=1;b=2;c=3}
+        $o1  | Should Count 3
+    }
+}
 
 if ($failedTests -gt 0) {
     throw "FAIL: $failedTests failed tests"
