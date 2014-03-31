@@ -145,7 +145,7 @@ function Should {
     # call the comparator
     if ($comparator -is [scriptblock]) {
         # handle scriptblock tests
-        $result = & $comparator -Value:$savedinput
+        $result = & $comparator $savedinput
     }
     elseif ($comparators -contains $comparator) {
         # handle value
