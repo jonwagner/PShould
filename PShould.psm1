@@ -167,7 +167,8 @@ function Should {
     if ($args[$i] -eq 'and') {
         $savedinput
     }
-    elseif ($args[$i] -eq '-test') {
+    
+    if ($args[$i] -eq '-test') {
         # if -test is specified, then just output $true/$false
         if ($result) {
             $true

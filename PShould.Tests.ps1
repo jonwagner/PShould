@@ -117,3 +117,4 @@ Check "ORDERED DICTIONARY COUNT" {
 if ($failedTests -gt 0) {
     throw "FAIL: $failedTests failed tests"
 }
+Throws "ERROR AND PASS THROWS" { @('a','b','c') | Should contain 'z' and | Should count 3 }
