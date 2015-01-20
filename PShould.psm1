@@ -163,6 +163,15 @@ function Should {
         $result = !$result
     }
 
+    # quickfix for Issue #5 Chained assertion only fails when last Should in chain fails
+    
+        if (!$result) {
+            if ($operator) { $operator += ' ' }
+            if ($not) { $not = 'not ' } else { $not = '' }
+            throw "Expected that (actual) ($savedinput) $not$comparator $operator($value)"
+        }
+    # end of quickfix
+
     # if the should ends in 'and', then emit the input for chaining
     if ($args[$i] -eq 'and') {
         $savedinput
@@ -176,13 +185,14 @@ function Should {
             $false
         }
     }
-    else {
-        if (!$result) {
-            if ($operator) { $operator += ' ' }
-            if ($not) { $not = 'not ' } else { $not = '' }
-            throw "Expected that (actual) ($savedinput) $not$comparator $operator($value)"
-        }
-    }
+    # moved the if statement to line 168 as part of quickfix for Issue #5
+    #else {
+    #    if (!$result) {
+    #        if ($operator) { $operator += ' ' }
+    #        if ($not) { $not = 'not ' } else { $not = '' }
+    #        throw "Expected that (actual) ($savedinput) $not$comparator $operator($value)"
+    #    }
+    #}
 }
 
 <#
