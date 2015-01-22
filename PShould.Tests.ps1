@@ -113,7 +113,7 @@ Check "ORDERED DICTIONARY COUNT" {
         $o1  | Should Count 3
     }
 }
-Throws "Fail on any failing chained should" { @('a','b','c') | Should Count 2 and | Should Contain 'b' }
+Throws "FAIL ON ANY FAILING CHAINED SHOULD" { @('a','b','c') | Should Count 2 and | Should Contain 'b' }
 
 if ($failedTests -gt 0) {
     throw "FAIL: $failedTests failed tests"

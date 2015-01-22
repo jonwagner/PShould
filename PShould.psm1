@@ -116,8 +116,26 @@ function Should {
     $not = $false
     $comparator = $args[$i++]
 
+    # we'll also need an object to store the results the assertion
+    $testresult = New-Object psobject 
+    $testresult | Add-Member NoteProperty Status 'inconclusive'
+    $testresult | Add-Member NoteProperty Assertion ''
+    $testresult | Add-Member NoteProperty Stacktrace ''
+    $testresult.pstypenames.Insert(0, "PShould.Testresult")
+
+    # and one to push the results of all chained assertion through the pipe
+    [psobject[]]$grandTotal = @()
+
     # gather the inputs into an array
     $savedinput = @($input)
+    
+    # extract the grandTotal from savedInput and then delete the object from the array
+    foreach($inp in $savedinput) {
+        if($inp -and $inp.pstypenames[0] -eq "PShould.Testresult") {
+            $grandTotal = $inp
+            $savedinput = $savedinput[0 .. ($savedinput.Length -2)]
+        }
+    }
 
     # unwrap certain types of collections if passed in individually
     if ($savedinput.Length -eq 1) {
@@ -163,36 +181,44 @@ function Should {
         $result = !$result
     }
 
-    # quickfix for Issue #5 Chained assertion only fails when last Should in chain fails
-    
-        if (!$result) {
-            if ($operator) { $operator += ' ' }
-            if ($not) { $not = 'not ' } else { $not = '' }
-            throw "Expected that (actual) ($savedinput) $not$comparator $operator($value)"
-        }
-    # end of quickfix
+    if($result) {
+        $testresult.Status = 'Passed'
+    }
+    else {
+        $testresult.Status = 'Failed'
+        $testresult.StackTrace = Get-PSCallStack
+    }
+    if ($operator) { $operator += ' ' }
+    if ($not) { $not = 'not ' } else { $not = '' }
+    $testresult.Assertion = "($savedinput) should $not$comparator $operator($value)"
+
+    # add the current result to grandTotal array
+    $grandTotal += $testresult
 
     # if the should ends in 'and', then emit the input for chaining
     if ($args[$i] -eq 'and') {
+        # add the grandTotal to the output
+        $savedinput = $savedinput + $grandTotal
         $savedinput
     }
-    elseif ($args[$i] -eq '-test') {
-        # if -test is specified, then just output $true/$false
-        if ($result) {
-            $true
+    else {
+        $shouldThrow = $false
+        # generate the output for each assertion
+        foreach($testresult in $grandTotal) {
+            # we always want to see the result (Passed | Failed)
+            $testresult.Status
+            # in case the -test switch is not used we also want to see exception like stacktraces per result for failures
+            if ($args[$i] -ne '-test' -and $testresult.Status -eq 'Failed') {
+                "Expected that $($testresult.Assertion)"
+                $testresult.Stacktrace
+                $shouldThrow = $true
+            }
         }
-        else {
-            $false
+        # throw the exception if the -test switch is not set
+        if ($shouldThrow) {
+            throw
         }
     }
-    # moved the if statement to line 168 as part of quickfix for Issue #5
-    #else {
-    #    if (!$result) {
-    #        if ($operator) { $operator += ' ' }
-    #        if ($not) { $not = 'not ' } else { $not = '' }
-    #        throw "Expected that (actual) ($savedinput) $not$comparator $operator($value)"
-    #    }
-    #}
 }
 
 <#
