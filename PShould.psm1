@@ -118,7 +118,7 @@ function Should {
 
     # we'll also need an object to store the results the assertion
     $testresult = New-Object psobject 
-    $testresult | Add-Member NoteProperty Status 'inconclusive'
+    $testresult | Add-Member NoteProperty Status 'Inconclusive'
     $testresult | Add-Member NoteProperty Assertion ''
     $testresult | Add-Member NoteProperty Stacktrace ''
     $testresult.pstypenames.Insert(0, "PShould.Testresult")
@@ -205,16 +205,19 @@ function Should {
         $shouldThrow = $false
         # generate the output for each assertion
         foreach($testresult in $grandTotal) {
-            # we always want to see the result (Passed | Failed)
-            $testresult.Status
-            # in case the -test switch is not used we also want to see exception like stacktraces per result for failures
-            if ($args[$i] -ne '-test' -and $testresult.Status -eq 'Failed') {
+            # in case the -test switch is used output to the console, but don't throw
+            if ($args[$i] -eq '-test') {
+                # we always want to see the result (Passed | Failed)
+                $testresult.Status
                 "Expected that $($testresult.Assertion)"
                 $testresult.Stacktrace
+            }
+            # if -test is not used and we have a failure, mark for throwing
+            elseif($testresult.Status -eq 'Failed'){
                 $shouldThrow = $true
             }
         }
-        # throw the exception if the -test switch is not set
+        # throw the exception if marked for throwing
         if ($shouldThrow) {
             throw
         }

@@ -90,7 +90,7 @@ Check "-TEST" { 5 | should be 5 -test }
 Check "NOT -TEST" { 7 | should not be 8 -test }
 Throws "Invalid Comparator true" { $true | should $true }
 Throws "Invalid Comparator foo" { $true | should foo }
-Throws "$null is not a collection" { $null | should be ("Null","Blank","Empty") }
+Throws '$null is not a collection' { $null | should be ("Null","Blank","Empty") }
 Check "NULL IN" { $null | should be -in ($null, "Null","Blank","Empty") }
 Check "IN" { 'null' | should be in ($null, "Null","Blank","Empty") }
 Check "ARRAY IN" { (1, 2) | should be in (1, 2, 3) }
