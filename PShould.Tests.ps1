@@ -15,7 +15,7 @@ function Check {
     }
     catch {
         Write-Host "FAIL: $name"
-        Write-Host $_       
+        Write-Host $_
         $script:failedTests++;
     }
 }
@@ -56,6 +56,8 @@ Check "NOT EQUAL ARRAY" { (1,2) | should not equal (3,4) }
 Check "NOT EQUAL ARRAY OF DIFFERENT LENGTHS" { (1,2,3) | should not equal (3,4) }
 Check "ARRAY CONTAIN" { (1,2) | should contain 1 }
 Check "NOT ARRAY CONTAIN" { (1,2) | should not contain 3 }
+Check "HASHTABLE CONTAIN" { @{"a"=1;"b"=2} | should contain "b" }
+Check "NOT HASHTABLE CONTAIN" { @{"a"=1;"b"=2} | should not contain 2 }
 Check "MATCH" { "hi, bob" | should match 'bob$' }
 Check "NOT MATCH" { "hi, james" | should not match 'bob$' }
 Check "BLANK" { "" | should be blank }

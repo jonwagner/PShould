@@ -167,7 +167,7 @@ function Should {
     if ($args[$i] -eq 'and') {
         $savedinput
     }
-    
+
     if ($args[$i] -eq '-test') {
         # if -test is specified, then just output $true/$false
         if ($result) {
@@ -371,7 +371,7 @@ function ShouldContain {
         $Element
     )
 
-    return $Collection -contains $Element
+    return $Collection.Contains($Element)
 }
 
 <#
@@ -491,7 +491,7 @@ function ShouldThrow {
 
     Tests whether the file PShould.ps1 exists.
 .Example
-    'PShould.ps1' | Should Exist 
+    'PShould.ps1' | Should Exist
 
     Tests whether the file PShould.ps1 exists.
 .Link
@@ -536,5 +536,5 @@ function ShouldContainContent {
 }
 
 # export all of the functions so we can see help on all of them
-Export-ModuleMember Should, ShouldBe, ShouldEqual, ShouldContain, ShouldMatch, ShouldCount, 
+Export-ModuleMember Should, ShouldBe, ShouldEqual, ShouldContain, ShouldMatch, ShouldCount,
     ShouldThrow, ShouldExist, ShouldContainContent
