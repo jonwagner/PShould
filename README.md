@@ -33,6 +33,8 @@ Getting started:
 	(1,2,3) | should not equal (3,4)
 	(1,2) | should contain 1
 	(1,2) | should not contain 3
+	@{"a"=1;"b"=2} | should contain "b"
+	@{"a"=1;"b"=2} | should not contain 2
 	"hi, bob" | should match 'bob$'
 	"hi, james" | should not match 'bob$'
 	"" | should be blank
@@ -48,7 +50,7 @@ Getting started:
 	{ "hi" } | should not throw
 	"hi" | should { param($value) $value -eq 'hi' }
 	@(1,2) | should { param($value) $value[0] + $value[1] -eq 3 }
-	@(2,2) | should not { param($value) $value[0] + $value[1] -eq 5 
+	@(2,2) | should not { param($value) $value[0] + $value[1] -eq 5
 	1 | should be 1 and | should be 1
 	1 | should be 1 and | should not be 2
 	@() | should count 0
