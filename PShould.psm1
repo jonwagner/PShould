@@ -47,6 +47,8 @@ $comparators = @(
     'Throw',
     'Match',
     'Contain',
+    'ContainAll',
+    'ContainNone',
     'Count',
     'Exist',
     'ContainContent'
@@ -362,6 +364,10 @@ function ShouldEqualEx {
     @(a,b,c) | Should Contain 'b'
 
     Checks whether the given array contains the letter b.
+.Example
+    @{"a"=1;"b"=2} | Should Contain 'b'
+
+    Checks whether the given hashtable contains the letter b as a key.
 .Link
     Should
 #>
@@ -372,6 +378,76 @@ function ShouldContain {
     )
 
     return $Collection.Contains($Element)
+}
+
+<#
+.Synopsis
+    Tests whether a collection contains all the given elements.
+.Description
+    Tests whether a collection contains all the given elements.
+.Parameter Collection
+    The collection to test.
+.Parameter Elements
+    The expected elements.
+.Example
+    ShouldContainAll @(a,b,c) @('b','a','c')
+
+    Checks whether the given array contains all the letters b, a, and c.
+.Example
+    @{a=1;c=3;b=2} | Should ContainAll @(b,a,c)
+
+    Checks whether the given hashtable contains the letters b, a, and c as keys.
+.Link
+    Should
+#>
+function ShouldContainAll {
+    param (
+        $Collection,
+        $Elements
+    )
+
+    $result = $True
+    $Elements.GetEnumerator() | ForEach-Object {
+        If (-Not ($Collection.Contains($_))) {
+            $result = $False
+        }
+    }
+    return $result
+}
+
+<#
+.Synopsis
+    Tests whether a collection contains none of the given elements.
+.Description
+    Tests whether a collection contains none of the given elements.
+.Parameter Collection
+    The collection to test.
+.Parameter Elements
+    The elements expected to not be present.
+.Example
+    ShouldContainNone @(a,b,c) @(e,f)
+
+    Checks that the given array does not contain either of the letters e, or f.
+.Example
+    @{a=1;c=3;b=2} | Should ContainNone @(e,f,g)
+
+    Checks that the given hashtable does not contain any of the keys e, f, or g.
+.Link
+    Should
+#>
+function ShouldContainNone {
+    param (
+        $Collection,
+        $Elements
+    )
+
+    $result = $True
+    $Elements.GetEnumerator() | ForEach-Object {
+        If ($Collection.Contains($_)) {
+            $result = $False
+        }
+    }
+    return $result
 }
 
 <#
@@ -536,5 +612,5 @@ function ShouldContainContent {
 }
 
 # export all of the functions so we can see help on all of them
-Export-ModuleMember Should, ShouldBe, ShouldEqual, ShouldContain, ShouldMatch, ShouldCount,
-    ShouldThrow, ShouldExist, ShouldContainContent
+Export-ModuleMember Should, ShouldBe, ShouldEqual, ShouldContain, ShouldContainAll,
+    ShouldContainNone, ShouldMatch, ShouldCount, ShouldThrow, ShouldExist, ShouldContainContent

@@ -35,6 +35,8 @@ Getting started:
 	(1,2) | should not contain 3
 	@{"a"=1;"b"=2} | should contain "b"
 	@{"a"=1;"b"=2} | should not contain 2
+	@{"a"=1;"b"=2} | should containall @("a","b")
+	@{"a"=1;"b"=2} | should containnone @(1, 2, "e")
 	"hi, bob" | should match 'bob$'
 	"hi, james" | should not match 'bob$'
 	"" | should be blank

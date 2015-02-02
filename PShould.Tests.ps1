@@ -58,6 +58,10 @@ Check "ARRAY CONTAIN" { (1,2) | should contain 1 }
 Check "NOT ARRAY CONTAIN" { (1,2) | should not contain 3 }
 Check "HASHTABLE CONTAIN" { @{"a"=1;"b"=2} | should contain "b" }
 Check "NOT HASHTABLE CONTAIN" { @{"a"=1;"b"=2} | should not contain 2 }
+Check "ARRAY CONTAINALL" { (1,2,3) | should containall (1,3) }
+Check "ARRAY CONTAINNONE" { (1,2,3) | should containnone (4,5,6) }
+Check "HASHTABLE CONTAINALL" { @{"a"=1;"b"=2} | should containall ("a", "b") }
+Check "HASHTABLE CONTAINNONE" { @{"a"=1;"b"=2} | should containnone ("c", "d", "e") }
 Check "MATCH" { "hi, bob" | should match 'bob$' }
 Check "NOT MATCH" { "hi, james" | should not match 'bob$' }
 Check "BLANK" { "" | should be blank }
