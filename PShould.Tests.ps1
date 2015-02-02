@@ -59,9 +59,13 @@ Check "NOT ARRAY CONTAIN" { (1,2) | should not contain 3 }
 Check "HASHTABLE CONTAIN" { @{"a"=1;"b"=2} | should contain "b" }
 Check "NOT HASHTABLE CONTAIN" { @{"a"=1;"b"=2} | should not contain 2 }
 Check "ARRAY CONTAINALL" { (1,2,3) | should containall (1,3) }
+Check "NOT ARRAY CONTAINALL" { (1,2) | should not containall (1,3) }
 Check "ARRAY CONTAINNONE" { (1,2,3) | should containnone (4,5,6) }
+Check "NOT ARRAY CONTAINNONE" { (1,2,3) | should not containnone (3,4,5,6) }
 Check "HASHTABLE CONTAINALL" { @{"a"=1;"b"=2} | should containall ("a", "b") }
+Check "NOT HASHTABLE CONTAINALL" { @{"a"=1;"c"=3} | should not containall ("a", "b") }
 Check "HASHTABLE CONTAINNONE" { @{"a"=1;"b"=2} | should containnone ("c", "d", "e") }
+Check "NOT HASHTABLE CONTAINNONE" { @{"a"=1;"b"=2} | should not containnone ("b", "c", "d") }
 Check "MATCH" { "hi, bob" | should match 'bob$' }
 Check "NOT MATCH" { "hi, james" | should not match 'bob$' }
 Check "BLANK" { "" | should be blank }
