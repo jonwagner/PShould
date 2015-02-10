@@ -37,6 +37,7 @@ function Throws {
     }
 }
 
+Check "Numeric Comparison" { 0 | Should Be Lt 2 }
 Check "BE" { 5 | should be 5 }
 Check "NOT BE" { 0 | should not be 1 }
 Check "$true is $true" { $true | should be $true }

@@ -272,6 +272,11 @@ function ShouldBe {
         return $true
      }
     else {
+        # although the operators handle dereferencing the array, it's an array of object and
+        # then numerics get converted to string comparisons
+        if ($Actual -is [system.array] -and $Actual.length -eq 1) {
+            $Actual = $Actual[0]
+        }
         return "`$Actual $Operator `$Expected" | iex
     }
 }
