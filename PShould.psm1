@@ -62,7 +62,7 @@ $comparators = @(
 
     Syntax:
 
-    input | Should [not] [comparison] [expected] [and | -test]
+    input | Should [not] [comparison] [expected] [as alias] [and | -test]
 
     The comparisons are:
 
@@ -75,6 +75,9 @@ $comparators = @(
     Exist - the input is a Path, and Test-Path is called to check its existence.
     ContainContent - the input is a Path, whose Get-Content is must contain a pattern.
     [ScriptBlock] - the scriptblock is executed. The first parameter is the input.
+
+    If the expected value is follwed by 'as' then the next parameter is used to identify the
+    assertion when an exception is thrown.
 
     If the command ends with 'and', then the inputs are copied to the output stream
     for further testing or operation.
@@ -103,6 +106,11 @@ $comparators = @(
     5 | Should { param($value) $value -gt 4 }
 
     Tests that the input passes the given function.
+.Example
+    $answer | Should Be 42 as 'answer to the ultimate question of life, the universe and everything'
+
+    Compares $answer to 42 and reports this error message if it is actually "money":
+      Expected that (actual answer to the ultimate question of life, the universe and everything) (money) Be (42)
 .Example
     "abc" | Should Match '^ab" -test
 
@@ -165,6 +173,12 @@ function Should {
         $result = !$result
     }
 
+    $alias = ''
+    if ($args[$i] -eq 'as') {
+        $i++
+        $alias = "'$($args[$i++])' "
+    }
+
     # if the should ends in 'and', then emit the input for chaining
     if ($args[$i] -eq 'and') {
         $savedinput
@@ -183,7 +197,7 @@ function Should {
         if (!$result) {
             if ($operator) { $operator += ' ' }
             if ($not) { $not = 'not ' } else { $not = '' }
-            throw "Expected that (actual) ($savedinput) $not$comparator $operator($value)"
+            throw "Expected that $alias(actual) ($savedinput) $not$comparator $operator($value)"
         }
     }
 }
